@@ -12,10 +12,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="buscar"
         options={{
-          title: 'Settings',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
+          title: 'Buscar',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="search" color={color} />,
         }}
       />
     </Tabs>
