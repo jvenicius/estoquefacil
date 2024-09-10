@@ -17,7 +17,7 @@ export default function Dashboard() {
     if (error) {
       console.error('Erro ao fazer logout:', error.message);
     } else {
-      router.replace('/login');
+      router.replace('/');
     }
   };
 
@@ -27,7 +27,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (isMounted && !isAuthenticated) {
-      router.replace('/login');
+      router.replace('/');
     }
   }, [isMounted, isAuthenticated]);
 
