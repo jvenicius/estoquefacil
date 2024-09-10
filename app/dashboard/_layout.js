@@ -32,13 +32,72 @@ export default function DashboardTabs() {
                 }}
             />
             <Tabs.Screen
-                name="cadastrar/index"
+                name="buscar/index"
                 options={{
-                    headerShown: false,
-                    title: 'Cadastrar',
+                    headerShown: true,
+                    title: 'Buscar produtos',
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="person" size={size} color={color} />
+                        <Ionicons name="search" size={size} color={color} />
                     ),
+                    headerStyle: {
+                        backgroundColor: '#327E8E',
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    tabBarActiveTintColor: '#FFF',
+                    tabBarInactiveTintColor: '#C7D1C8',
+                    tabBarStyle: {
+                        backgroundColor: '#327E8E',
+                    },
+                    headerTitleAlign: "center"
+                }}
+            />
+            <Tabs.Screen
+                name="registrar/index"
+                options={{
+                    headerShown: true,
+                    title: 'Registrar produto',
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="add" size={size} color={color} />
+                    ),
+                    headerStyle: {
+                        backgroundColor: '#327E8E',
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    tabBarActiveTintColor: '#FFF',
+                    tabBarInactiveTintColor: '#C7D1C8',
+                    tabBarStyle: {
+                        backgroundColor: '#327E8E',
+                    },
+                    headerTitleAlign: "center"
+                }}
+            />
+            <Tabs.Screen
+                name="alertas/index"
+                options={{
+                    headerShown: true,
+                    title: 'Gerenciar alertas',
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="alert" size={size} color={color} />
+                    ),
+                    headerStyle: {
+                        backgroundColor: '#327E8E',
+                    },
+                    headerTintColor: '#fff',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    tabBarActiveTintColor: '#FFF',
+                    tabBarInactiveTintColor: '#C7D1C8',
+                    tabBarStyle: {
+                        backgroundColor: '#327E8E',
+                    },
+                    headerTitleAlign: "center"
                 }}
             />
         </Tabs>

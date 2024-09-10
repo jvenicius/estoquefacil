@@ -1,8 +1,9 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { Text, Avatar, ActivityIndicator, IconButton, MD3Colors } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../hooks/authContext";
 import { useState, useEffect } from "react";
+import { Ionicons } from '@expo/vector-icons';
 
 
 export default function Dashboard() {
@@ -10,6 +11,17 @@ export default function Dashboard() {
   const { isAuthenticated } = useAuth();
   const [isMounted, setIsMounted] = useState(false);
   const { logout } = useAuth();
+
+  const produtos = ['Pipoca', 'Feijão', 'Arroz', 'Arroz', 'Arroz', 'Arroz', 'Arroz', 'Arroz', 'Arroz', 'Arroz'];
+
+  const renderItem = ({ item }) => (
+    <View style={styles.itemContainer}>
+      <Text style={styles.itemText}>{item}</Text>
+      <TouchableOpacity>
+        <Ionicons name="open-outline" size={20} color="#4B8A96" />
+      </TouchableOpacity>
+    </View>
+  );
 
   const handleLogout = async () => {
     const error = await logout();
@@ -59,6 +71,15 @@ export default function Dashboard() {
           />
         </View>
       </View>
+      <View>
+        <Text style={styles.listTitle}>ÚLTIMOS REGISTROS</Text>
+        <FlatList
+          data={produtos}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={styles.listContent}
+        />
+      </View>
     </View>
   );
 }
@@ -77,7 +98,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#FFF",
-    fontWeight: "bold", // Usar "bold" como alternativa para compatibilidade
+    fontWeight: "bold",
   },
   subTitle: {
     color: "#FFF",
@@ -91,6 +112,26 @@ const styles = StyleSheet.create({
   accountName: {
     color: "#FFF",
     marginLeft: 10,
+  },
+  listTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginVertical: 20,
+    alignSelf: 'center',
+  },
+  listContent: {
+    paddingHorizontal: 20,
+    paddingBottom: 100,
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  itemText: {
+    fontSize: 16,
   },
 
 });
