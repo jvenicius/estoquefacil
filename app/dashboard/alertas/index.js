@@ -30,6 +30,7 @@ export default function AlertaIndex() {
         >
           <Ionicons name="add" size={28} color="white" />
         </TouchableOpacity>
+        
       </View>
     </View>
   );
