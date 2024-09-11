@@ -2,20 +2,26 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { inserirNoBanco } from "../../../database/services";
+
+import {TextInput }from "react-native-paper";
 
 export default function Registrar() {
-  // const navigation = useNavigation();
 
   const [sku, setSku] = useState("");
   const [nome, setNome] = useState("");
   const [fornecedor, setFornecedor] = useState("");
   const [lote, setLote] = useState("");
   const [estoque, setEstoque] = useState("");
+
+  let data = {
+    tabela: 'produto',
+    dados: {},
+    
+  }
 
   const handleRegister = () => {
     console.log("Produto registrado:", {
@@ -36,38 +42,38 @@ export default function Registrar() {
           style={styles.input}
           value={sku}
           onChangeText={setSku}
-          placeholder="SKU"
+          label="SKU"
         />
         <TextInput
           style={styles.input}
           value={nome}
           onChangeText={setNome}
-          placeholder="Nome"
+          label="Nome"
         />
         <TextInput
           style={styles.input}
           value={fornecedor}
           onChangeText={setFornecedor}
-          placeholder="Fornecedor"
+          label="Fornecedor"
         />
         <TextInput
           style={styles.input}
           value={lote}
           onChangeText={setLote}
-          placeholder="Lote"
+          label="Lote"
         />
         <TextInput
           style={styles.input}
           value={estoque}
           onChangeText={setEstoque}
-          placeholder="Estoque"
+          label="Estoque"
         />
 
         <TouchableOpacity
           style={styles.registerButton}
           onPress={handleRegister}
         >
-          <Text style={styles.registerButtonText}>REGISTRAR</Text>
+          <Text style={styles.registerButtonText} onPress={async () => await inserirNoBanco()}>REGISTRAR</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -93,10 +99,9 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "#4B8A96",
-    padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+    borderColor: '#4B8A96',
   },
   registerButton: {
     backgroundColor: "#4B8A96",
