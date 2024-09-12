@@ -98,7 +98,7 @@ export default function Dashboard() {
         </View>
       </View>
       <View>
-        <Text style={styles.listTitle}>ÚLTIMOS REGISTROS</Text>
+        <Text style={styles.listTitle}>Produtos</Text>
         <FlatList
           data={produtos}
           renderItem={renderItem}
