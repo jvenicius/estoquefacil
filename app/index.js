@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, CheckBox, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import { Input, Button } from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
@@ -52,15 +52,6 @@ export default function Login() {
         value={password}
         secureTextEntry
       />
-
-      <View style={styles.checkboxContainer}>
-        <CheckBox
-          value={autoLogin}
-          onValueChange={setAutoLogin}
-          style={styles.checkbox}
-        />
-        <Text style={styles.checkboxLabel}>Login automático</Text>
-      </View>
 
       <Button
         title={"Entrar"}
