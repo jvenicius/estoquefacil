@@ -1,22 +1,40 @@
 import { View, StyleSheet, FlatList, TouchableOpacity } from "react-native";
-import { Text, Avatar, ActivityIndicator, IconButton, MD3Colors } from "react-native-paper";
+import {
+  Text,
+  Avatar,
+  ActivityIndicator,
+  IconButton,
+  MD3Colors,
+} from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useAuth } from "../../hooks/authContext";
 import { useState, useEffect } from "react";
-import { Ionicons } from '@expo/vector-icons';
-
+import { Ionicons } from "@expo/vector-icons";
+import supabase from "@/database/database";
 
 export default function Dashboard() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [isMounted, setIsMounted] = useState(false);
   const { logout } = useAuth();
+  const [produtos, setProdutos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const produtos = ['Pipoca', 'Feijão', 'Arroz', 'Arroz', 'Arroz', 'Arroz', 'Arroz', 'Arroz', 'Arroz', 'Arroz'];
+  const fetchProdutos = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from("produtos").select("*");
+
+    if (error) {
+      console.error("Erro ao buscar produtos:", error.message);
+    } else {
+      setProdutos(data);
+    }
+    setLoading(false);
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{item}</Text>
+      <Text style={styles.itemText}>{item.nome}</Text>
       <TouchableOpacity>
         <Ionicons name="open-outline" size={20} color="#4B8A96" />
       </TouchableOpacity>
@@ -27,23 +45,24 @@ export default function Dashboard() {
     const error = await logout();
 
     if (error) {
-      console.error('Erro ao fazer logout:', error.message);
+      console.error("Erro ao fazer logout:", error.message);
     } else {
-      router.replace('/');
+      router.replace("/");
     }
   };
 
   useEffect(() => {
     setIsMounted(true);
+    fetchProdutos(); // Busca os produtos quando o componente é montado
   }, []);
 
   useEffect(() => {
     if (isMounted && !isAuthenticated) {
-      router.replace('/');
+      router.replace("/");
     }
   }, [isMounted, isAuthenticated]);
 
-  if (!isMounted || !isAuthenticated) {
+  if (!isMounted || !isAuthenticated || loading) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
@@ -76,7 +95,7 @@ export default function Dashboard() {
         <FlatList
           data={produtos}
           renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={styles.listContent}
         />
       </View>
@@ -107,7 +126,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginTop: 16,
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
   accountName: {
     color: "#FFF",
@@ -115,23 +134,22 @@ const styles = StyleSheet.create({
   },
   listTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginVertical: 20,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   listContent: {
     paddingHorizontal: 20,
     paddingBottom: 100,
   },
   itemContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
   },
   itemText: {
     fontSize: 16,
   },
-
 });
