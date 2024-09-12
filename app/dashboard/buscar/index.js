@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { TextInput } from 'react-native-paper';
+import { useRouter } from "expo-router";
 export default function Buscar() {
+    const router = useRouter();
     const [sku, setSku] = useState("");
 
     return (
@@ -9,8 +11,12 @@ export default function Buscar() {
             <Text style={styles.inputLabel}>Digite o nome do produto ou SKU</Text>
             <TextInput style={styles.input} placeholder='Ex.: Pipoca' onChangeText={setSku} />
 
-            <TouchableOpacity style={styles.searchButton}>
+            <TouchableOpacity 
+                style={styles.searchButton}
+                onPress={() => router.push('/routes/produtosEncontrados')}
+            >
                 <Text style={styles.searchButtonText}>PESQUISAR</Text>
+                
             </TouchableOpacity>
 
         </View>
