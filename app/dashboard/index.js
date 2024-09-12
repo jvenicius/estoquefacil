@@ -20,6 +20,13 @@ export default function Dashboard() {
   const [produtos, setProdutos] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const handleNavigateToUpdate = (produtoId) => {
+    router.push({
+      pathname: "/atualizarProduto",
+      params: { produtoId },
+    });
+  };
+
   const fetchProdutos = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("produtos").select("*");
@@ -35,7 +42,7 @@ export default function Dashboard() {
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <Text style={styles.itemText}>{item.nome}</Text>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => handleNavigateToUpdate(item.id)}>
         <Ionicons name="open-outline" size={20} color="#4B8A96" />
       </TouchableOpacity>
     </View>

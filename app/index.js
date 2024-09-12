@@ -53,15 +53,6 @@ export default function Login() {
         secureTextEntry
       />
 
-      <View style={styles.checkboxContainer}>
-        <CheckBox
-          value={autoLogin}
-          onValueChange={setAutoLogin}
-          style={styles.checkbox}
-        />
-        <Text style={styles.checkboxLabel}>Login automático</Text>
-      </View>
-
       <Button
         title={"Entrar"}
         onPress={async () => {

@@ -1,3 +1,3 @@
 const colors = {
-  background: "327E8E",
+  background: "#327E8E",
 };
