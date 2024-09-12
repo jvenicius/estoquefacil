@@ -26,11 +26,10 @@ export default function AlertaIndex() {
 
         <TouchableOpacity
           style={styles.fab}
-          onPress={() => router.push('/routes/addAlerta')}
+          onPress={() => router.push("/create/addAlerta")}
         >
           <Ionicons name="add" size={28} color="white" />
         </TouchableOpacity>
-        
       </View>
     </View>
   );

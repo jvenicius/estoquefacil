@@ -1,41 +1,53 @@
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { inserirNoBanco } from "../../../database/services";
-
-import {TextInput }from "react-native-paper";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
+import { TextInput } from "react-native-paper";
+import supabase from "../../../database/database";
 
 export default function Registrar() {
-
   const [sku, setSku] = useState("");
   const [nome, setNome] = useState("");
   const [fornecedor, setFornecedor] = useState("");
   const [lote, setLote] = useState("");
   const [estoque, setEstoque] = useState("");
 
-  let data = {
-    tabela: 'produto',
-    dados: {},
-    
-  }
+  const handleRegister = async () => {
+    if (!sku || !nome || !fornecedor || !lote || !estoque) {
+      Alert.alert("Erro", "Preencha todos os campos.");
+      return;
+    }
 
-  const handleRegister = () => {
-    console.log("Produto registrado:", {
-      sku,
-      nome,
-      fornecedor,
-      lote,
-      estoque,
-    });
+    const dados = {
+      tabela: "produto",
+      dados: {
+        sku: sku,
+        nome: nome,
+        fornecedor: fornecedor,
+        lote: lote,
+        estoque: estoque,
+      },
+    };
+
+    const { data, error } = await supabase
+      .from("produtos")
+      .insert([dados.dados])
+      .select();
+
+    if (!error) {
+      Alert.alert("Sucesso", "Produto registrado com sucesso!");
+    } else {
+      Alert.alert("Falhou", "Deu ruim!");
+    }
+
+    // Limpar os campos após o registro bem-sucedido
+    setSku("");
+    setNome("");
+    setFornecedor("");
+    setLote("");
+    setEstoque("");
   };
 
   return (
     <View style={styles.container}>
-    
       <Text style={styles.title}>REGISTRAR PRODUTO</Text>
       <View style={styles.form}>
         <TextInput
@@ -71,14 +83,14 @@ export default function Registrar() {
 
         <TouchableOpacity
           style={styles.registerButton}
-          onPress={handleRegister}
+          onPress={async () => await handleRegister()}
         >
-          <Text style={styles.registerButtonText} onPress={async () => await inserirNoBanco()}>REGISTRAR</Text>
+          <Text style={styles.registerButtonText}>REGISTRAR</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -101,7 +113,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 10,
-    borderColor: '#4B8A96',
+    borderColor: "#4B8A96",
   },
   registerButton: {
     backgroundColor: "#4B8A96",
@@ -116,4 +128,3 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
-

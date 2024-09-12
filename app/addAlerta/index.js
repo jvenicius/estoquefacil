@@ -8,22 +8,45 @@ import {
   Alert,
 } from "react-native";
 
-export default function criarAlerta() {
+export default function addAlerta() {
   const [produto, setProduto] = useState("");
   const [estoqueMinimo, setEstoqueMinimo] = useState("");
   const [estoqueAtual, setEstoqueAtual] = useState("");
 
-  const handleSave = () => {
-    if (!produto || !estoqueMinimo || !estoqueAtual) {
-      Alert.alert("Erro", "Todos os campos são obrigatórios");
+  const handleRegister = async () => {
+    if (!sku || !estoque || !nomeDoAlerta) {
+      Alert.alert("Erro", "Preencha todos os campos.");
       return;
     }
+    
+    const dados = {
+      tabela: "produto",
+      dados: {
+        sku: sku,
+        nome: nome,
+        fornecedor: fornecedor,
+        lote: lote,
+        estoque: estoque,
+      },
+    };
 
-    Alert.alert("Sucesso", "Alerta de estoque criado com sucesso");
+    const { data, error } = await supabase
+      .from("produtos")
+      .insert([dados.dados])
+      .select();
 
-    setProduto("");
-    setEstoqueMinimo("");
-    setEstoqueAtual("");
+    if (!error) {
+      Alert.alert("Sucesso", "Produto registrado com sucesso!");
+    } else {
+      Alert.alert("Falhou", "Deu ruim!");
+    }
+
+    // Limpar os campos após o registro bem-sucedido
+    setSku("");
+    setNome("");
+    setFornecedor("");
+    setLote("");
+    setEstoque("");
   };
 
   return (
