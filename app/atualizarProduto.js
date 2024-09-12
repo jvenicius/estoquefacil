@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useRouter, useLocalSearchParams, useNavigation } from "expo-router"; // Para navegação e parâmetros
 import supabase from "../database/database";
@@ -7,7 +7,7 @@ import supabase from "../database/database";
 export default function AtualizarProduto() {
   const navigation = useNavigation();
   const router = useRouter();
-  const { produtoId } = useLocalSearchParams(); // Pegando o ID do produto da rota
+  const { produtoId } = useLocalSearchParams();
 
   const [produto, setProduto] = useState(null);
   const [sku, setSku] = useState("");
@@ -16,7 +16,6 @@ export default function AtualizarProduto() {
   const [lote, setLote] = useState("");
   const [estoque, setEstoque] = useState("");
 
-  // Função para buscar o produto pelo ID ao carregar a página
   useEffect(() => {
     navigation.setOptions({
       title: "Atualizar Produto",
@@ -25,8 +24,8 @@ export default function AtualizarProduto() {
       },
       headerTintColor: "#fff", // Cor do texto no header
     });
+
     const fetchProduto = async () => {
-      // Aqui você faria a chamada para o banco de dados, por exemplo, no Supabase
       const { data, error } = await supabase
         .from("produtos")
         .select("*")
@@ -70,6 +69,36 @@ export default function AtualizarProduto() {
     }
   };
 
+  // Função para apagar o produto do banco de dados
+  const handleDelete = async () => {
+    Alert.alert(
+      "Confirmar Exclusão",
+      "Tem certeza de que deseja excluir este produto?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Excluir",
+          onPress: async () => {
+            const { error } = await supabase
+              .from("produtos")
+              .delete()
+              .eq("id", produtoId);
+
+            if (!error) {
+              console.log("Produto excluído com sucesso!");
+              router.push("/dashboard"); // Volta para a lista de produtos
+            } else {
+              console.error("Erro ao excluir produto:", error);
+            }
+          },
+        },
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>ATUALIZAR PRODUTO</Text>
@@ -109,6 +138,10 @@ export default function AtualizarProduto() {
         <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
           <Text style={styles.updateButtonText}>ATUALIZAR</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+          <Text style={styles.deleteButtonText}>EXCLUIR</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -144,6 +177,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   updateButtonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  deleteButton: {
+    backgroundColor: "#FF4C4C",
+    paddingVertical: 15,
+    alignItems: "center",
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  deleteButtonText: {
     color: "white",
     fontSize: 16,
     fontWeight: "bold",

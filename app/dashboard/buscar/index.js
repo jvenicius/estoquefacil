@@ -50,6 +50,7 @@ export default function Buscar() {
                                 <Text>ID: {produto.id}</Text>
                                 <Text>Nome: {produto.nome}</Text>
                                 <Text>Lote: {produto.lote}</Text>
+                                <Text>Estoque: {produto.estoque}</Text>
                             </View>
                         ))
                     ) : (
