@@ -11,6 +11,7 @@ import { useAuth } from "../../hooks/authContext";
 import { useState, useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import supabase from "@/database/database";
+import axios from "axios";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -19,6 +20,29 @@ export default function Dashboard() {
   const { logout } = useAuth();
   const [produtos, setProdutos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentDate, setCurrentDate] = useState('');
+
+  const fetchCurrentDate = async () => {
+    try {
+      const response = await axios.get('http://worldtimeapi.org/api/timezone/Europe/Lisbon');
+      const datetime = new Date(response.data.datetime);
+      setCurrentDate(formatDate(datetime));
+    } catch (error) {
+      console.error('Erro ao buscar a data atual:', error);
+    }
+  };
+
+  const formatDate = (date) => {
+    const days = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+    const months = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    
+    const dayName = days[date.getDay()];
+    const day = date.getDate();
+    const monthName = months[date.getMonth()];
+    const year = date.getFullYear();
+
+    return `${dayName}, ${day} de ${monthName} de ${year}`;
+  };
 
   const handleNavigateToUpdate = (produtoId) => {
     router.push({
@@ -60,7 +84,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     setIsMounted(true);
-    fetchProdutos(); // Busca os produtos quando o componente é montado
+    fetchCurrentDate()
+    fetchProdutos(); 
   }, []);
 
   useEffect(() => {
@@ -83,6 +108,9 @@ export default function Dashboard() {
           <Text style={styles.subTitle} variant="titleMedium">
             Sistema de Gestão e controle
           </Text>
+        </View>
+        <View style={styles.dateContainer}>
+          <Text style={styles.dateText}>{currentDate}</Text>
         </View>
         <View style={styles.accountInfo}>
           <Text style={styles.accountName} variant="bodyLarge">
@@ -128,6 +156,14 @@ const styles = StyleSheet.create({
   },
   subTitle: {
     color: "#FFF",
+  },
+  dateContainer: {
+    alignItems: 'center',
+  },
+  dateText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   accountInfo: {
     flexDirection: "row",

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ActivityIndicator, Linking } from 'react-native';
 import { Input, Button } from '@rneui/themed';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
@@ -13,6 +13,20 @@ export default function Login() {
   const [carregando, setCarregando] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
+
+  const handleWhatsAppSupport = () => {
+    const phoneNumber = "+558596979482"; 
+    const message = "Olá, preciso de ajuda com o sistema EstoqueFácil.";
+    const whatsappURL = `whatsapp://send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+    Linking.openURL(whatsappURL)
+      .then(() => {
+        console.log('WhatsApp aberto com sucesso!');
+      })
+      .catch(() => {
+        alert('O WhatsApp não está instalado ou ocorreu um erro ao abrir.');
+      });
+  };
 
   const handleLogin = async (email, password) => {
     setResultado('');
@@ -67,6 +81,10 @@ export default function Login() {
       />
       <TouchableOpacity onPress={() => router.push("/recover")}>
         <Text style={styles.forgotPassword}>Recuperar senha</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.whatsappButton} onPress={handleWhatsAppSupport}>
+        <Text style={styles.whatsappText}>Fale com o suporte via WhatsApp</Text>
       </TouchableOpacity>
 
       <Text style={styles.footerText}>
@@ -138,6 +156,17 @@ const styles = StyleSheet.create({
     color: '#0f5e65',
     marginTop: 10,
     textDecorationLine: 'underline',
+  },
+  whatsappButton: {
+    marginTop: 20,
+    backgroundColor: '#25D366',
+    padding: 10,
+    borderRadius: 8,
+  },
+  whatsappText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   footerText: {
     textAlign: 'center',
