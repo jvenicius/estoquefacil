@@ -35,7 +35,7 @@ export default function Registrar() {
     if (!error) {
       Alert.alert("Sucesso", "Produto registrado com sucesso!");
     } else {
-      Alert.alert("Falhou", "Deu ruim!");
+      Alert.alert("Erro", "Tente novamente");
     }
 
     // Limpar os campos após o registro bem-sucedido
