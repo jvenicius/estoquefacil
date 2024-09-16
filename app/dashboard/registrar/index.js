@@ -55,30 +55,35 @@ export default function Registrar() {
           value={sku}
           onChangeText={setSku}
           label="SKU"
+          aria-label="SKU"
         />
         <TextInput
           style={styles.input}
           value={nome}
           onChangeText={setNome}
           label="Nome"
+          aria-label="Nome"
         />
         <TextInput
           style={styles.input}
           value={fornecedor}
           onChangeText={setFornecedor}
           label="Fornecedor"
+          aria-label="Fornecedor"
         />
         <TextInput
           style={styles.input}
           value={lote}
           onChangeText={setLote}
           label="Lote"
+          aria-label="Lote"
         />
         <TextInput
           style={styles.input}
           value={estoque}
           onChangeText={setEstoque}
           label="Estoque"
+          aria-label="Estoque"
         />
 
         <TouchableOpacity
