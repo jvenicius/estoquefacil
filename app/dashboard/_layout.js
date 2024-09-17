@@ -66,24 +66,6 @@ export default function DashboardTabs() {
           headerTitleAlign: "center",
         }}
       />
-      <Tabs.Screen
-        name="alertas/index"
-        options={{
-          headerShown: true,
-          title: "Gerenciar alertas",
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="warning" size={size} color={color} />
-          ),
-          headerStyle: {
-            backgroundColor: "#327E8E",
-          },
-          headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          headerTitleAlign: "center",
-        }}
-      />
     </Tabs>
   );
 }
