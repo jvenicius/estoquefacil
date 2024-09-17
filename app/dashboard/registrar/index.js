@@ -38,7 +38,6 @@ export default function Registrar() {
       Alert.alert("Erro", "Tente novamente");
     }
 
-    // Limpar os campos após o registro bem-sucedido
     setSku("");
     setNome("");
     setFornecedor("");
