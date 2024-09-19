@@ -10,17 +10,74 @@ import {
   Linking,
   Button
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from "expo-router";
 import { useAuth } from "../hooks/authContext";
+
+const MAX_ATTEMPTS = 3; 
+const BLOCK_TIME = 300000; 
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [autoLogin, setAutoLogin] = useState(false);
   const [resultado, setResultado] = useState("");
   const [carregando, setCarregando] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
+
+  useEffect(() => {
+    checkBlocked(); 
+  }, []);
+
+  const checkBlocked = async () => {
+    const lastAttemptTime = await AsyncStorage.getItem('lastAttemptTime');
+    const failedAttempts = await AsyncStorage.getItem('failedAttempts');
+
+    if (lastAttemptTime && failedAttempts) {
+      const currentTime = new Date().getTime();
+      if (currentTime - lastAttemptTime < BLOCK_TIME && failedAttempts >= MAX_ATTEMPTS) {
+        setResultado('*Conta temporariamente bloqueada. Tente novamente mais tarde.');
+      }
+    }
+  };
+
+  const handleLogin = async (email, password) => {
+    setResultado("");
+    setCarregando(true);
+
+    
+    const lastAttemptTime = await AsyncStorage.getItem('lastAttemptTime');
+    const failedAttempts = await AsyncStorage.getItem('failedAttempts');
+
+    if (lastAttemptTime && failedAttempts) {
+      const currentTime = new Date().getTime();
+      if (currentTime - lastAttemptTime < BLOCK_TIME && failedAttempts >= MAX_ATTEMPTS) {
+        setResultado('*Conta temporariamente bloqueada. Tente novamente mais tarde.');
+        setCarregando(false);
+        return;
+      }
+    }
+
+    
+    const success = await login({ email, password });
+    setCarregando(false);
+
+    if (success) {
+      router.replace("/dashboard");
+      await AsyncStorage.removeItem('failedAttempts'); 
+      await AsyncStorage.removeItem('lastAttemptTime');
+    } else {
+      const newFailedAttempts = (parseInt(failedAttempts) || 0) + 1;
+      await AsyncStorage.setItem('failedAttempts', newFailedAttempts.toString());
+      await AsyncStorage.setItem('lastAttemptTime', new Date().getTime().toString());
+
+      if (newFailedAttempts >= MAX_ATTEMPTS) {
+        setResultado('*Conta temporariamente bloqueada. Tente novamente mais tarde.');
+      } else {
+        setResultado('*As credenciais informadas estão incorretas');
+      }
+    }
+  };
 
   const handleWhatsAppSupport = () => {
     const phoneNumber = "+558596979482";
@@ -36,18 +93,6 @@ export default function Login() {
       .catch(() => {
         alert("O WhatsApp não está instalado ou ocorreu um erro ao abrir.");
       });
-  };
-
-  const handleLogin = async (email, password) => {
-    setResultado("");
-    setCarregando(true);
-    const success = await login({ email, password });
-    setCarregando(false);
-    if (success) {
-      router.replace("/dashboard");
-    } else {
-      setResultado("*As credenciais informadas estão incorretas");
-    }
   };
 
   return (
@@ -154,18 +199,6 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 8,
     marginVertical: 5,
-  },
-  checkboxContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginVertical: 10,
-  },
-  checkbox: {
-    marginRight: 8,
-  },
-  checkboxLabel: {
-    fontSize: 14,
-    color: "#333",
   },
   forgotPassword: {
     color: "#0f5e65",
