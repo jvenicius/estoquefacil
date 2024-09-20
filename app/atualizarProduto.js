@@ -15,6 +15,7 @@ export default function AtualizarProduto() {
   const [fornecedor, setFornecedor] = useState("");
   const [lote, setLote] = useState("");
   const [estoque, setEstoque] = useState("");
+  const [mensagem, setMensagem] = useState("");
 
   useEffect(() => {
     navigation.setOptions({
@@ -63,40 +64,28 @@ export default function AtualizarProduto() {
 
     if (!error) {
       console.log("Produto atualizado com sucesso!");
-      router.push("/dashboard"); // Volta para a lista de produtos
+      setMensagem("Produto atualizado com sucesso!");
     } else {
+      setMensagem("Erro ao atualizar produto:", error);
       console.error("Erro ao atualizar produto:", error);
     }
   };
 
   // Função para apagar o produto do banco de dados
   const handleDelete = async () => {
-    Alert.alert(
-      "Confirmar Exclusão",
-      "Tem certeza de que deseja excluir este produto?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Excluir",
-          onPress: async () => {
-            const { error } = await supabase
-              .from("produtos")
-              .delete()
-              .eq("id", produtoId);
+    const { error } = await supabase
+      .from("produtos")
+      .delete()
+      .eq("id", produtoId);
 
-            if (!error) {
-              console.log("Produto excluído com sucesso!");
-              router.push("/dashboard"); // Volta para a lista de produtos
-            } else {
-              console.error("Erro ao excluir produto:", error);
-            }
-          },
-        },
-      ]
-    );
+    if (!error) {
+      console.log("Produto excluído com sucesso!");
+      setMensagem("Produto excluído com sucesso!");
+      router.push("/dashboard");
+    } else {
+      console.error("Erro ao excluir produto:", error);
+      setMensagem("Erro ao excluir produto:", error);
+    }
   };
 
   return (
@@ -109,40 +98,65 @@ export default function AtualizarProduto() {
           value={sku}
           onChangeText={setSku}
           label="SKU"
+          testID="sku-input"
         />
         <TextInput
           style={styles.input}
           value={nome}
           onChangeText={setNome}
           label="Nome"
+          testID="nome-input"
         />
         <TextInput
           style={styles.input}
           value={fornecedor}
           onChangeText={setFornecedor}
           label="Fornecedor"
+          testID="fornecedor-input"
         />
         <TextInput
           style={styles.input}
           value={lote}
           onChangeText={setLote}
           label="Lote"
+          testID="lote-input"
         />
         <TextInput
           style={styles.input}
           value={estoque}
           onChangeText={setEstoque}
           label="Estoque"
+          testID="estoque-input"
         />
 
-        <TouchableOpacity style={styles.updateButton} onPress={handleUpdate}>
+        <TouchableOpacity
+          style={styles.updateButton}
+          testID="atualizar-button"
+          onPress={handleUpdate}
+        >
           <Text style={styles.updateButtonText}>ATUALIZAR</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          testID="excluir-button"
+          onPress={handleDelete}
+        >
           <Text style={styles.deleteButtonText}>EXCLUIR</Text>
         </TouchableOpacity>
       </View>
+
+      <Text
+        testID="mensagem-text"
+        style={{
+          textAlign: "center",
+          fontSize: 16,
+          marginTop: 10,
+          fontWeight: 500,
+        }}
+      >
+        {mensagem}
+      </Text>
     </View>
   );
 }
