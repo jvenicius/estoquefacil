@@ -8,14 +8,14 @@ import {
   Image,
   ActivityIndicator,
   Linking,
-  Button
+  Button,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useAuth } from "../hooks/authContext";
 
-const MAX_ATTEMPTS = 3; 
-const BLOCK_TIME = 300000; 
+const MAX_ATTEMPTS = 3;
+const BLOCK_TIME = 300000;
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -26,17 +26,22 @@ export default function Login() {
   const { login } = useAuth();
 
   useEffect(() => {
-    checkBlocked(); 
+    checkBlocked();
   }, []);
 
   const checkBlocked = async () => {
-    const lastAttemptTime = await AsyncStorage.getItem('lastAttemptTime');
-    const failedAttempts = await AsyncStorage.getItem('failedAttempts');
+    const lastAttemptTime = await AsyncStorage.getItem("lastAttemptTime");
+    const failedAttempts = await AsyncStorage.getItem("failedAttempts");
 
     if (lastAttemptTime && failedAttempts) {
       const currentTime = new Date().getTime();
-      if (currentTime - lastAttemptTime < BLOCK_TIME && failedAttempts >= MAX_ATTEMPTS) {
-        setResultado('*Conta temporariamente bloqueada. Tente novamente mais tarde.');
+      if (
+        currentTime - lastAttemptTime < BLOCK_TIME &&
+        failedAttempts >= MAX_ATTEMPTS
+      ) {
+        setResultado(
+          "*Conta temporariamente bloqueada. Tente novamente mais tarde."
+        );
       }
     }
   };
@@ -45,36 +50,47 @@ export default function Login() {
     setResultado("");
     setCarregando(true);
 
-    
-    const lastAttemptTime = await AsyncStorage.getItem('lastAttemptTime');
-    const failedAttempts = await AsyncStorage.getItem('failedAttempts');
+    const lastAttemptTime = await AsyncStorage.getItem("lastAttemptTime");
+    const failedAttempts = await AsyncStorage.getItem("failedAttempts");
 
     if (lastAttemptTime && failedAttempts) {
       const currentTime = new Date().getTime();
-      if (currentTime - lastAttemptTime < BLOCK_TIME && failedAttempts >= MAX_ATTEMPTS) {
-        setResultado('*Conta temporariamente bloqueada. Tente novamente mais tarde.');
+      if (
+        currentTime - lastAttemptTime < BLOCK_TIME &&
+        failedAttempts >= MAX_ATTEMPTS
+      ) {
+        setResultado(
+          "*Conta temporariamente bloqueada. Tente novamente mais tarde."
+        );
         setCarregando(false);
         return;
       }
     }
 
-    
     const success = await login({ email, password });
     setCarregando(false);
 
     if (success) {
       router.replace("/dashboard");
-      await AsyncStorage.removeItem('failedAttempts'); 
-      await AsyncStorage.removeItem('lastAttemptTime');
+      await AsyncStorage.removeItem("failedAttempts");
+      await AsyncStorage.removeItem("lastAttemptTime");
     } else {
       const newFailedAttempts = (parseInt(failedAttempts) || 0) + 1;
-      await AsyncStorage.setItem('failedAttempts', newFailedAttempts.toString());
-      await AsyncStorage.setItem('lastAttemptTime', new Date().getTime().toString());
+      await AsyncStorage.setItem(
+        "failedAttempts",
+        newFailedAttempts.toString()
+      );
+      await AsyncStorage.setItem(
+        "lastAttemptTime",
+        new Date().getTime().toString()
+      );
 
       if (newFailedAttempts >= MAX_ATTEMPTS) {
-        setResultado('*Conta temporariamente bloqueada. Tente novamente mais tarde.');
+        setResultado(
+          "*Conta temporariamente bloqueada. Tente novamente mais tarde."
+        );
       } else {
-        setResultado('*As credenciais informadas estão incorretas');
+        setResultado("*As credenciais informadas estão incorretas");
       }
     }
   };
@@ -114,6 +130,7 @@ export default function Login() {
         onChangeText={(text) => setEmail(text)}
         value={email}
         keyboardType="email-address"
+        testID="email-input"
       />
 
       <Text style={styles.label}>Senha</Text>
@@ -122,17 +139,20 @@ export default function Login() {
         placeholder="********"
         onChangeText={(text) => setPassword(text)}
         value={password}
+        data-testid="password-input"
         secureTextEntry
+        testID="password-input"
       />
 
       <Button
         title={"Entrar"}
+        testID="login-button"
         onPress={async () => {
           await handleLogin(email, password);
         }}
       />
 
-      <Text style={styles.errorText}>{resultado}</Text>
+      <Text style={styles.errorText} testID="error-text">{resultado}</Text>
 
       <ActivityIndicator animating={carregando} />
       <TouchableOpacity onPress={() => router.push("/recover")}>

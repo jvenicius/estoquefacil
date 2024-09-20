@@ -51,6 +51,7 @@ export default function DashboardTabs() {
       <Tabs.Screen
         name="registrar/index"
         options={{
+          tabBarTestID: "registrar-tabBar",
           headerShown: true,
           title: "Registrar produto",
           tabBarIcon: ({ color, size }) => (

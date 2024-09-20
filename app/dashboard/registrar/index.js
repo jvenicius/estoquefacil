@@ -9,10 +9,12 @@ export default function Registrar() {
   const [fornecedor, setFornecedor] = useState("");
   const [lote, setLote] = useState("");
   const [estoque, setEstoque] = useState("");
+  const [mensagem, setMensagem] = useState("");
 
   const handleRegister = async () => {
     if (!sku || !nome || !fornecedor || !lote || !estoque) {
       Alert.alert("Erro", "Preencha todos os campos.");
+      setMensagem("Erro, preencha todos os campos.");
       return;
     }
 
@@ -34,8 +36,10 @@ export default function Registrar() {
 
     if (!error) {
       Alert.alert("Sucesso", "Produto registrado com sucesso!");
+      setMensagem("Produto registrado com sucesso!");
     } else {
       Alert.alert("Erro", "Tente novamente");
+      setMensagem("Erro, tente novamente");
     }
 
     setSku("");
@@ -55,6 +59,7 @@ export default function Registrar() {
           onChangeText={setSku}
           label="SKU"
           aria-label="SKU"
+          testID="sku-input"
         />
         <TextInput
           style={styles.input}
@@ -62,6 +67,7 @@ export default function Registrar() {
           onChangeText={setNome}
           label="Nome"
           aria-label="Nome"
+          testID="nome-input"
         />
         <TextInput
           style={styles.input}
@@ -69,6 +75,7 @@ export default function Registrar() {
           onChangeText={setFornecedor}
           label="Fornecedor"
           aria-label="Fornecedor"
+          testID="fornecedor-input"
         />
         <TextInput
           style={styles.input}
@@ -76,6 +83,7 @@ export default function Registrar() {
           onChangeText={setLote}
           label="Lote"
           aria-label="Lote"
+          testID="lote-input"
         />
         <TextInput
           style={styles.input}
@@ -83,14 +91,28 @@ export default function Registrar() {
           onChangeText={setEstoque}
           label="Estoque"
           aria-label="Estoque"
+          testID="estoque-input"
         />
 
         <TouchableOpacity
           style={styles.registerButton}
           onPress={async () => await handleRegister()}
+          testID="registrar-button"
         >
           <Text style={styles.registerButtonText}>REGISTRAR</Text>
         </TouchableOpacity>
+
+        <Text
+          testID="mensagem-text"
+          style={{
+            textAlign: "center",
+            fontSize: 16,
+            marginTop: 10,
+            fontWeight: 500,
+          }}
+        >
+          {mensagem}
+        </Text>
       </View>
     </View>
   );
